@@ -8,7 +8,7 @@ HOMEPAGE="http://src.chromium.org"
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="arm"
+KEYWORDS="arm64"
 IUSE=""
 
 RDEPEND="chromeos-base/chromeos-firmware-rockpro64"
