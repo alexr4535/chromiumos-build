@@ -1,43 +1,25 @@
-# Detect device type
-i2c dev 4
-if i2c probe 62; then
-  echo "Detected i2c4@62 charger circuit."
-  echo "It seems to be Pinebook Pro."
-  setenv fdtfile rockchip/rk3399-pinebook-pro.dtb
-else
-  echo "Did not detect i2c4@62 charger circuit."
-  echo "It seems to be RockPro64."
-  setenv fdtfile rockchip/rk3399-rockpro64.dtb
-fi
-
-# Detect bootdevice
-if test "${devtype}${devnum}" = "mmc0"; then
-  setenv bootdevice mmcblk1 # SDHCI
-elif test "${devtype}${devnum}" = "mmc1"; then
-  setenv bootdevice mmcblk0 # SD
-else
-  setenv bootdevice sda # USB?
-fi
+setenv fdtfile rk3399-pinebook-pro.dtb
+setenv bootdevice mmcblk0 # SD
 
 echo "FDT: ${fdtfile}"
 echo "Bootdevice: ${bootdevice}"
 
-if test -e ${devtype} ${devnum}:${distro_bootpart} ${prefix}/first-b.txt; then
-  echo "Found ${prefix}/first-b.txt, trying ROOT-B first"
-  setenv prefix /boot
-  setenv distro_bootpart 5
-  setenv bootdevice_part 5
-  run boot_extlinux
-fi
+setenv bootargs init=/sbin/init rw console=tty0 console=ttyS0,115200 no_console_suspend earlycon=uart,mmio32,0x01c28000 panic=10 consoleblank=0 loglevel=1 cma=256M root=/dev/mmcblk0p1
 
-# Scan ROOT-A
-setenv prefix /boot/
-setenv distro_bootpart 3
-setenv bootdevice_part 3
-run boot_extlinux
+printenv
 
-# Scan ROOT-B
-setenv prefix /boot
-setenv distro_bootpart 5
-setenv bootdevice_part 5
-run boot_extlinux
+echo Loading DTB
+load mmc ${mmc_bootdev}:1 ${fdt_addr_r} ${fdtfile}
+
+echo Loading Initramfs
+load mmc ${mmc_bootdev}:1 ${ramdisk_addr_r} uInitrd.img
+
+echo Loading Kernel
+load mmc ${mmc_bootdev}:1 ${kernel_addr_r} Image
+
+echo Resizing FDT
+fdt addr ${fdt_addr_r}
+fdt resize
+
+echo Booting kernel
+booti ${kernel_addr_r} ${ramdisk_addr_r} ${fdt_addr_r}
