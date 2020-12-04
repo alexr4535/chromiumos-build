@@ -15,7 +15,6 @@ IUSE=""
 
 RDEPEND="
   net-misc/rsync
-  net-wireless/bluez
   sys-boot/rockchip-uboot
   chromeos-base/chromeos-bsp-baseboard-gru
   "
@@ -36,8 +35,8 @@ src_install() {
   doins "${FILESDIR}"/gesture/*
 
   # Install Bluetooth ID override.
-  insinto "/etc/bluetooth"
-  doins "${FILESDIR}"/bluetooth/*
+  #insinto "/etc/bluetooth"
+  #doins "${FILESDIR}"/bluetooth/*
 
   # Install audio config files
   local audio_config_dir="${FILESDIR}/audio-config"
@@ -52,4 +51,5 @@ src_install() {
   exeinto "/usr/bin"
   doexe "${FILESDIR}"/scripts/*
 }
+
 

@@ -74,3 +74,4 @@ echo "Syncing..."
 sync
 
 echo "Done. Please reboot now."
+

@@ -1,0 +1,1 @@
+chromeos-bsp-pinebook-pro-7.ebuild

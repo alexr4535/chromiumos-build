@@ -29,3 +29,4 @@ fi
 sfdisk -N 1 --no-reread "$STATE_DISK" < <(echo ", +$1")
 partx -u "$STATE_DISK"
 resize2fs "$STATE_PATH"
+
