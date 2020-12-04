@@ -14,7 +14,6 @@ KEYWORDS="*"
 IUSE=""
 
 RDEPEND="
-  chromeos-base/device-appid
   net-misc/rsync
   net-wireless/bluez
   sys-boot/rockchip-uboot
@@ -26,6 +25,7 @@ DEPEND="${RDEPEND}"
 S="${WORKDIR}"
 
 src_install() {
+  # Install hciattach to enable hci0
   insinto /etc/init
   doins "${FILESDIR}/upstart/sdio-hciattach.conf"
   insinto "/etc/udev/hwdb.d"
@@ -36,8 +36,8 @@ src_install() {
   doins "${FILESDIR}"/gesture/*
 
   # Install Bluetooth ID override.
-  #insinto "/etc/bluetooth"
-  #doins "${FILESDIR}"/bluetooth/*
+  insinto "/etc/bluetooth"
+  doins "${FILESDIR}"/bluetooth/*
 
   # Install audio config files
   local audio_config_dir="${FILESDIR}/audio-config"
@@ -47,5 +47,9 @@ src_install() {
   doins ${FILESDIR}/udev-rules/*
   insinto /etc/camera
   doins ${FILESDIR}/camera/camera_characteristics.conf
+
+  # Install additional scripts
+  exeinto "/usr/bin"
+  doexe "${FILESDIR}"/scripts/*
 }
 
