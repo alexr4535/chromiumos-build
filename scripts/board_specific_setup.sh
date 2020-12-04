@@ -1,20 +1,35 @@
-# Copyright 2019 The Chromium OS Authors. All rights reserved.
-# Use of this source code is governed by a BSD-style license that can be
-# found in the LICENSE file.
-
-# TODO:
-# this is hack needed due to `kernel install script`
-# that does not create kernel images that can be put on
-# KERN-A/B partition (with included dts)
-skip_kernelblock_install=1
+#!/bin/bash
+. $(dirname ${BASH_SOURCE[0]})/fydeos_version.sh
+CHROMEOS_ARC_ANDROID_SDK_VERSION=28
+CHROMEOS_ARC_VERSION=6104653
+CHROMEOS_VERSION_AUSERVER=https://up.fydeos.com/service/update2
+CHROMEOS_VERSION_DEVSERVER=https://devserver.fydeos.com:9999
+CHROMEOS_VERSION_TRACK=stable-channel
+#CHROMEOS_PATCH=${CHROMEOS_PATCH##*_}
+CHROMEOS_PATCH=11
+if [ -n "${CHROMEOS_BUILD}" ]; then
+  CHROMEOS_VERSION_STRING="${CHROMEOS_BUILD}.${CHROMEOS_BRANCH}.${CHROMEOS_PATCH}.$(get_build_number ${CHROMEOS_PATCH})"
+  export FYDEOS_RELEASE=$(get_fydeos_release_version)
+fi
+skip_blacklist_check=1
+skip_test_image_content=1
 
 install_rockpro64_bootloader() {
   local image="$1"
 
   info "Installing uboot firmware on ${image}"
-  sudo dd if="${ROOT}/boot/idbloader.img" of="$image" bs=32k seek=1 conv=notrunc,fsync || die "fail to install uboot fireware"
-  sudo dd if="${ROOT}/boot/uboot.img" of="$image" bs=64k seek=128 conv=notrunc,fsync || die "fail to install uboot fireware"
-  sudo dd if="${ROOT}/boot/trust.img" of="$image" bs=64k seek=192 conv=notrunc,fsync || die "fail to install uboot fireware"
+  dd if="${ROOT}/boot/idbloader.img" of="$image" \
+    conv=notrunc,fsync \
+    bs=32k \
+    seek=1 || die "fail to install idbloader.img"
+  dd if="${ROOT}/boot/u-boot.img" of="$image" \
+    conv=notrunc,fsync \
+    bs=64k \
+    seek=128 || die "fail to install u-boot.img"
+  dd if="${ROOT}/boot/trust.img" of="$image" \
+    conv=notrunc,fsync \
+    bs=64k \
+    seek=192 || die "fail to install trust.img"
 
   info "Installed bootloader."
 }

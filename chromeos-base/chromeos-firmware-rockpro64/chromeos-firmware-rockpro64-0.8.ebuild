@@ -4,14 +4,14 @@
 EAPI=5
 
 CROS_WORKON_REPO="https://github.com/ayufan-rock64"
-CROS_WORKON_COMMIT="b792eed5bee7e0e492d8e03324938537c9bb749e"
-CROS_WORKON_BLACKLIST="1"
+CROS_WORKON_COMMIT="eeab15eccd3efdb64d09ca30ca0225dcf72a28da"
+CROS_WORKON_MANUAL_UPREV="1"
 CROS_WORKON_PROJECT="linux-package"
 
 DEPEND=""
 RDEPEND="${DEPEND}"
 
-LICENSE="BSD-Google"
+LICENSE="MIT"
 SLOT="0"
 KEYWORDS="-* arm64 arm"
 
@@ -32,9 +32,8 @@ src_compile() {
 }
 
 src_install() {
-  insinto "/etc/"
-  doins -r "${S}/root/etc/firmware/"
-
   insinto "/lib/firmware/"
-  doins -r "${S}/root/lib/firmware/rtlbt/"
+  doins -r "${S}/root/lib/firmware/rtlbt"
+  doins -r "${S}/root/etc/firmware/"
+  doins  ${S}/root/vendor/etc/firmware/*
 }

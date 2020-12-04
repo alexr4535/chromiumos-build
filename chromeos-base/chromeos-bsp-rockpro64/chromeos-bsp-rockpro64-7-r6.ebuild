@@ -1,1 +1,0 @@
-chromeos-bsp-rockpro64-7.ebuild

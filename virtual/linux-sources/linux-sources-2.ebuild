@@ -9,8 +9,8 @@ HOMEPAGE="http://src.chromium.org"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="*"
-IUSE="kernel-5_8"
+IUSE="kernel-4_4"
 
 RDEPEND="
-	kernel-5_8? ( sys-kernel/upstream-kernel )
+	kernel-4_4? ( sys-kernel/rockchip-kernel )
 "
